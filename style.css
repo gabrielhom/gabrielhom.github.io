@@ -23,8 +23,8 @@ body.light-theme {
 /* Theme Toggle Button */
 .theme-toggle {
     position: fixed;
-    top: 2rem;
-    right: 2rem;
+    top: 1.5rem;
+    right: 1.5rem;
     background: var(--card-bg);
     border: 1px solid var(--border);
     color: var(--text-primary);
@@ -38,6 +38,17 @@ body.light-theme {
     font-size: 1.2rem;
     transition: all 0.3s ease;
     z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Sombra pra destacar */
+}
+
+@media (max-width: 600px) {
+    .theme-toggle {
+        top: auto;
+        bottom: 2rem;
+        right: 1.5rem;
+        width: 48px; /* Maior pra dedo gordo */
+        height: 48px;
+    }
 }
 
 .theme-toggle:hover {
