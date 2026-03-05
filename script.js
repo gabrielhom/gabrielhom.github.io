@@ -54,7 +54,12 @@ const translations = {
     }
 };
 
-let currentLang = localStorage.getItem('lang') || 'pt';
+function getDefaultLang() {
+    const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    return browserLang.startsWith('pt') ? 'pt' : 'en';
+}
+
+let currentLang = localStorage.getItem('lang') || getDefaultLang();
 
 function applyLanguage(lang) {
     currentLang = lang;
