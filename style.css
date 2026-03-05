@@ -93,6 +93,8 @@ body {
 .card {
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     background: var(--glass-gradient);
     border: 1px solid var(--glass-border);
     padding: 2.5rem;
@@ -269,7 +271,7 @@ h1 {
 .tags {
     display: flex;
     gap: 0.6rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     flex-wrap: wrap;
 }
 
@@ -297,6 +299,7 @@ body.light-theme .tags span {
     display: flex;
     gap: 1rem;
     margin-top: auto;
+    padding-top: 2rem;
 }
 
 .btn {
