@@ -40,6 +40,26 @@
         <section class="projects">
             <h2 data-i18n="projectsTitle">Projetos em Destaque</h2>
             <div class="grid">
+                <!-- rag-docs -->
+                <article class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-lines"></i>
+                        <h3>rag-docs</h3>
+                    </div>
+                    <p data-i18n="ragdocsDesc">Pipeline de <strong>RAG</strong> para documentos com ingestão assíncrona: upload → fila (<strong>RabbitMQ</strong>) → workers de parsing/chunking/embedding → busca vetorial em <strong>Postgres + pgvector</strong>. Respostas do LLM com citação da página de origem.</p>
+                    <div class="tags">
+                        <span>Python</span>
+                        <span>FastAPI</span>
+                        <span>RabbitMQ</span>
+                        <span>pgvector</span>
+                        <span>OpenAI / RAG</span>
+                        <span>Docker</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://github.com/gabrielhom/rag-docs" target="_blank" class="btn" data-i18n="viewGithub">Ver no GitHub</a>
+                    </div>
+                </article>
+
                 <!-- Sub-Hunt -->
                 <article class="card">
                     <div class="card-header">
