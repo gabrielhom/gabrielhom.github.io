@@ -7,9 +7,7 @@
     <meta name="description" content="Portfólio de Gabriel Mello - Desenvolvedor de Software focado em Python, Automação e Soluções Eficientes.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>try{if(localStorage.getItem('theme')==='light'||(!localStorage.getItem('theme')&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('light')}catch(e){}</script>
 </head>
 <body>
     <div class="blobs">
@@ -17,7 +15,6 @@
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-    <div class="grain"></div>
     <main class="container">
         <header class="hero">
             <div class="avatar-container">
@@ -40,6 +37,26 @@
         <section class="projects">
             <h2 data-i18n="projectsTitle">Projetos em Destaque</h2>
             <div class="grid">
+                <!-- claude-discord-presence -->
+                <article class="card">
+                    <div class="card-header">
+                        <i class="fab fa-discord"></i>
+                        <h3>claude-discord-presence</h3>
+                    </div>
+                    <p data-i18n="presenceDesc">Discord Rich Presence para o <strong>Claude Code</strong>. Plugin <strong>zero dependências</strong> que fala IPC direto com o Discord, funciona no WSL2 via daemon no Windows, agrega várias sessões e não expõe prompts nem comandos.</p>
+                    <div class="tags">
+                        <span>Node.js</span>
+                        <span>Discord IPC</span>
+                        <span>Claude Code Plugin</span>
+                        <span>npm</span>
+                        <span>WSL2</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://www.npmjs.com/package/claude-discord-presence" target="_blank" class="btn btn-primary">npm</a>
+                        <a href="https://github.com/gabrielhom/claude-discord-presence" target="_blank" class="btn" data-i18n="code">Código</a>
+                    </div>
+                </article>
+
                 <!-- rag-docs -->
                 <article class="card">
                     <div class="card-header">

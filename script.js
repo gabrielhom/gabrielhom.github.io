@@ -10,19 +10,17 @@ toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
 toggleBtn.setAttribute('aria-label', 'Toggle Theme');
 toggleGroup.appendChild(toggleBtn);
 
+const root = document.documentElement;
 const setIcon = () => {
-    toggleBtn.innerHTML = document.body.classList.contains('light-theme')
+    toggleBtn.innerHTML = root.classList.contains('light')
         ? '<i class="fas fa-sun"></i>'
         : '<i class="fas fa-moon"></i>';
 };
 
-if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.body.classList.add('light-theme');
-}
 setIcon();
 
 toggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', root.classList.toggle('light') ? 'light' : 'dark');
     setIcon();
 });
 
@@ -32,6 +30,7 @@ const translations = {
         subtitle: 'Software Developer & Automation',
         bio: 'Desenvolvedor focado em criar soluções eficientes e automatizar processos.<br>Especialista em <strong>Python</strong>, <strong>JavaScript</strong> e resolução de problemas técnicos complexos.',
         projectsTitle: 'Projetos em Destaque',
+        presenceDesc: 'Discord Rich Presence para o <strong>Claude Code</strong>. Plugin <strong>zero dependências</strong> que fala IPC direto com o Discord, funciona no WSL2 via daemon no Windows, agrega várias sessões e não expõe prompts nem comandos.',
         ragdocsDesc: 'Pipeline de <strong>RAG</strong> para documentos com ingestão assíncrona: upload → fila (<strong>RabbitMQ</strong>) → workers de parsing/chunking/embedding → busca vetorial em <strong>Postgres + pgvector</strong>. Respostas do LLM com citação da página de origem.',
         subhuntDesc: 'Ferramenta completa para legendas: <strong>CLI</strong> para terminal e <strong>GUI Nativa</strong> (Toga) para macOS/Windows. Integração com OpenSubtitles e busca por Hash/Metadata.',
         vagahunterDesc: 'Plataforma Fullstack de monitoramento de vagas. Utiliza <strong>Web Scraping</strong> para agregar oportunidades e <strong>IA (Gemini 2.0)</strong> para analisar o "match" da vaga com o perfil do candidato automaticamente.',
@@ -46,6 +45,7 @@ const translations = {
         subtitle: 'Software Developer & Automation',
         bio: 'Developer focused on creating efficient solutions and automating processes.<br>Specialist in <strong>Python</strong>, <strong>JavaScript</strong> and solving complex technical problems.',
         projectsTitle: 'Featured Projects',
+        presenceDesc: 'Discord Rich Presence for <strong>Claude Code</strong>. <strong>Zero-dependency</strong> plugin that speaks Discord IPC directly, works on WSL2 via a Windows-side daemon, merges multiple sessions and never leaks prompts or commands.',
         ragdocsDesc: 'Document <strong>RAG</strong> pipeline with async ingestion: upload → queue (<strong>RabbitMQ</strong>) → parsing/chunking/embedding workers → vector search in <strong>Postgres + pgvector</strong>. LLM answers with source-page citations.',
         subhuntDesc: 'Complete subtitle tool: <strong>CLI</strong> for terminal and <strong>Native GUI</strong> (Toga) for macOS/Windows. OpenSubtitles integration with Hash/Metadata search.',
         vagahunterDesc: 'Fullstack job monitoring platform. Uses <strong>Web Scraping</strong> to aggregate opportunities and <strong>AI (Gemini 2.0)</strong> to automatically analyze job-candidate match.',

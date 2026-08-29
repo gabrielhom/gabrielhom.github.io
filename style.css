@@ -102,6 +102,7 @@ body {
     backdrop-filter: blur(22px) saturate(130%);
     -webkit-backdrop-filter: blur(22px) saturate(130%);
     box-shadow: 0 12px 34px rgba(0,0,0,0.28), inset 0 1px 0 var(--glass-highlight);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .card::before {
@@ -287,7 +288,7 @@ h1 {
     box-shadow: inset 0 1px 0 var(--glass-highlight);
 }
 
-body.light-theme .tags span {
+html.light .tags span {
     background: rgba(0, 0, 0, 0.08);
     color: #0f172a;
     border: 1px solid rgba(0, 0, 0, 0.12);
@@ -295,10 +296,11 @@ body.light-theme .tags span {
 }
 
 /* Apple-style Buttons */
+.card p { margin-bottom: 1.5rem; }
+.tags { margin-top: auto; }
 .card-actions {
     display: flex;
     gap: 1rem;
-    margin-top: auto;
     padding-top: 2rem;
 }
 
@@ -330,16 +332,16 @@ body.light-theme .tags span {
     box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
 }
 
-body.light-theme .btn {
+html.light .btn {
     background: rgba(0, 0, 0, 0.05);
     color: #1d1d1f;
 }
 
-body.light-theme .btn:hover {
+html.light .btn:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-body.light-theme .btn-primary {
+html.light .btn-primary {
     background: #0071e3;
     color: #fff;
 }
@@ -356,7 +358,7 @@ footer {
 }
 
 /* Light Mode (Clean Apple) */
-body.light-theme {
+html.light {
     --bg-color: #f5f5f7; /* Apple Grey */
     --text-primary: #1d1d1f;
     --text-secondary: #86868b;
@@ -365,21 +367,21 @@ body.light-theme {
     --glass-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
-body.light-theme .blobs {
+html.light .blobs {
     background: radial-gradient(circle at 50% 0%, #ffffff 0%, #f5f5f7 100%);
 }
 
-body.light-theme .blob {
+html.light .blob {
     opacity: 0.12;
 }
 
-body.light-theme h1 {
+html.light h1 {
     background: linear-gradient(120deg, #0f172a, #0a84ff, #5ac8fa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-body.light-theme .card::after {
+html.light .card::after {
     opacity: 0.18;
 }
 
@@ -429,8 +431,8 @@ body.light-theme .card::after {
     border-color: rgba(255,255,255,0.18);
 }
 
-body.light-theme .theme-toggle,
-body.light-theme .lang-toggle {
+html.light .theme-toggle,
+html.light .lang-toggle {
     background:
         linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02)),
         radial-gradient(120% 140% at 30% 20%, rgba(0,0,0,0.08), transparent 50%);
@@ -440,16 +442,14 @@ body.light-theme .lang-toggle {
 
 @media (max-width: 600px) {
     h1 { font-size: 2.5rem; }
-    .container { padding: 4rem 1.5rem; }
-    .toggle-group {
-        top: auto;
-        bottom: 2rem;
-        right: 1.5rem;
-    }
+    .container { padding: 5rem 1.25rem 3rem; }
+    .grid { grid-template-columns: 1fr; }
+    .card { padding: 2rem; }
+    .toggle-group { top: 1rem; right: 1rem; }
     .theme-toggle,
     .lang-toggle {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         border: 1px solid var(--glass-border);
         background:
             linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06)),
@@ -458,12 +458,23 @@ body.light-theme .lang-toggle {
         backdrop-filter: blur(18px) saturate(130%);
         -webkit-backdrop-filter: blur(18px) saturate(130%);
     }
-    body.light-theme .theme-toggle,
-    body.light-theme .lang-toggle {
+    html.light .theme-toggle,
+    html.light .lang-toggle {
         background:
             linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02)),
             radial-gradient(120% 140% at 30% 20%, rgba(0,0,0,0.08), transparent 50%);
         border: 1px solid rgba(0,0,0,0.08);
         box-shadow: 0 10px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blob, .avatar-container::before { animation: none; }
+    .card, .card::before { transition: none; }
+}
+
+/* primeiro card = destaque, largura total (e evita card órfão com número ímpar) */
+@media (min-width: 761px) {
+    .grid > .card:first-child { grid-column: 1 / -1; }
+    .grid > .card:first-child p { max-width: 62ch; }
 }
