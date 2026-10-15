@@ -26,11 +26,12 @@ const translations = {
         navContact: 'Contato',
         bio: 'Desenvolvedor de software. Coloco <strong>IA</strong> pra trabalhar de verdade (LLMs, RAG, agentes) e automatizo o que dá pra automatizar, em <strong>Python</strong> e <strong>TypeScript</strong>.',
         contact: 'Fale comigo',
-        presenceNote: 'Ao vivo do meu GitHub, desenhado do jeito que o meu plugin <a href="#claude-discord-presence">claude-discord-presence</a> desenha.',
+        presenceLabel: 'Agora no meu GitHub',
+        presenceNote: 'Meu último commit público, atualizado a cada visita e desenhado do jeito que o meu plugin <a href="#claude-discord-presence">claude-discord-presence</a> desenha no Discord.',
         presenceStates: { typing: 'Programando', building: 'Em pausa', sleeping: 'Dormindo' },
         presenceFallback: ['Programando', 'claude-discord-presence (main)', 'Rich Presence pro Claude Code'],
-        ago: 'há',
-        days: n => n === 1 ? 'há 1 dia' : `há ${n} dias`,
+        ago: 'último commit há',
+        days: n => n === 1 ? 'último commit há 1 dia' : `último commit há ${n} dias`,
         workTitle: 'Projetos',
         presenceFact: 'Plugin do Claude Code',
         presenceDesc: 'Discord Rich Presence para o <strong>Claude Code</strong>. Plugin <strong>zero dependências</strong> que fala IPC direto com o Discord, funciona no WSL2 via daemon no Windows, agrega várias sessões e não expõe prompts nem comandos.',
@@ -67,11 +68,12 @@ const translations = {
         navContact: 'Contact',
         bio: 'Software developer. I put <strong>AI</strong> to real work (LLMs, RAG, agents) and automate whatever can be automated, in <strong>Python</strong> and <strong>TypeScript</strong>.',
         contact: 'Get in touch',
-        presenceNote: 'Live from my GitHub, drawn the way my <a href="#claude-discord-presence">claude-discord-presence</a> plugin draws it.',
+        presenceLabel: 'Right now on my GitHub',
+        presenceNote: 'My latest public commit, refreshed on every visit and drawn the way my <a href="#claude-discord-presence">claude-discord-presence</a> plugin draws it on Discord.',
         presenceStates: { typing: 'Coding', building: 'On a break', sleeping: 'Sleeping' },
         presenceFallback: ['Coding', 'claude-discord-presence (main)', 'Rich Presence for Claude Code'],
-        ago: '',
-        days: n => n === 1 ? '1 day ago' : `${n} days ago`,
+        ago: 'last commit',
+        days: n => n === 1 ? 'last commit 1 day ago' : `last commit ${n} days ago`,
         workTitle: 'Work',
         presenceFact: 'Claude Code plugin',
         presenceDesc: 'Discord Rich Presence for <strong>Claude Code</strong>. <strong>Zero-dependency</strong> plugin that speaks Discord IPC directly, works on WSL2 via a Windows-side daemon, merges multiple sessions and never leaks prompts or commands.',
@@ -137,6 +139,7 @@ langBtn.addEventListener('click', () => applyLanguage(currentLang === 'pt' ? 'en
 
 // Status ao vivo: o último push público no GitHub, no formato do claude-discord-presence
 const presence = {
+    card: document.querySelector('[data-presence]'),
     title: document.querySelector('[data-p-title]'),
     repo: document.querySelector('[data-p-repo]'),
     msg: document.querySelector('[data-p-msg]'),
@@ -169,15 +172,16 @@ function renderPresence() {
     presence.repo.textContent = `${s.repo} (${s.branch})`;
     presence.msg.textContent = s.msg;
     presence.time.textContent = secs < 86400
-        ? `${t.ago} ${pad(Math.floor(secs / 3600))}:${pad(Math.floor(secs / 60) % 60)}:${pad(secs % 60)}`.trim()
+        ? `${t.ago} ${pad(Math.floor(secs / 3600))}:${pad(Math.floor(secs / 60) % 60)}:${pad(secs % 60)}${currentLang === 'en' ? ' ago' : ''}`
         : t.days(Math.floor(secs / 86400));
     presence.timeRow.hidden = false;
+    if (s.url) presence.card.href = s.url;
 }
 
 async function loadPresence() {
     // ponytail: 2 chamadas sem token por visita; o limite do GitHub é 60/h por IP, cache de 5 min na sessão
     let s;
-    try { s = JSON.parse(sessionStorage.getItem('presence') || 'null'); } catch (e) {}
+    try { s = JSON.parse(sessionStorage.getItem('presence2') || 'null'); } catch (e) {}
     if (!s || Date.now() - s.fetched > 5 * 60 * 1000) {
         const repos = await (await fetch('https://api.github.com/users/gabrielhom/repos?sort=pushed&per_page=5')).json();
         const repo = repos.find(r => !r.fork && r.name !== 'gabrielhom.github.io');
@@ -187,9 +191,10 @@ async function loadPresence() {
             branch: repo.default_branch,
             msg: commits[0].commit.message.split('\n')[0],
             at: Date.parse(commits[0].commit.committer.date),
+            url: commits[0].html_url,
             fetched: Date.now()
         };
-        try { sessionStorage.setItem('presence', JSON.stringify(s)); } catch (e) {}
+        try { sessionStorage.setItem('presence2', JSON.stringify(s)); } catch (e) {}
     }
     presence.state = s;
     renderPresence();
@@ -201,6 +206,70 @@ loadPresence().catch(() => {});  // sem rede ou sem cota: fica o card estático
 
 // Vídeos: sem autoplay para quem pede menos movimento
 if (reduceMotion) document.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
+
+// Bonzi: chega surfando quando o painel aparece, acena, pisca de vez em quando e reage ao clique.
+// Mesmo algoritmo do Microsoft Agent: quadros com duração, ramificação aleatória com peso e caminho de saída.
+const stage = document.querySelector('[data-bonzi]');
+if (stage && !reduceMotion && 'IntersectionObserver' in window) {
+    let agent, anim, idx, prev, exiting, timer, onEnd;
+    const layers = [0, 1].map(() => {
+        const d = document.createElement('div');
+        d.className = 'bonzi-layer';
+        stage.appendChild(d);
+        return d;
+    });
+
+    const draw = f => {
+        if (!f.i || !f.i.length) f = agent.anims.RestPose.frames[0];
+        layers.forEach((l, i) => {
+            const im = f.i[i];
+            l.style.visibility = im ? 'visible' : 'hidden';
+            if (im) l.style.backgroundPosition = `${im[0] / (agent.atlas[0] - agent.size[0]) * 100}% ${im[1] / (agent.atlas[1] - agent.size[1]) * 100}%`;
+        });
+    };
+
+    const next = () => {
+        const f = anim.frames[idx];
+        if (exiting && f.x != null) return f.x;
+        if (f.b) {
+            let r = Math.random() * 100;
+            for (const [frame, weight] of f.b) { if (r <= weight) return frame; r -= weight; }
+        }
+        return idx + 1;
+    };
+
+    const finish = () => { const done = onEnd; onEnd = null; if (done) done(); };
+
+    const step = () => {
+        const last = idx >= anim.frames.length - 1;
+        // animações com saída: o último quadro é só um marcador; dali o Agent volta pelo exitBranch do quadro anterior
+        if (last && anim.exit && !exiting && prev != null) {
+            exiting = true;
+            if (anim.frames[prev].x == null) return finish();
+            idx = anim.frames[prev].x;
+            return step();
+        }
+        const f = anim.frames[idx];
+        // o Show começa com quadros vazios: o Bonzi ainda não chegou
+        if (anim === agent.anims.Show && (!f.i || !f.i.length)) layers.forEach(l => { l.style.visibility = 'hidden'; });
+        else draw(f);
+        if (last) return finish();
+        timer = setTimeout(() => { prev = idx; idx = Math.min(next(), anim.frames.length - 1); step(); }, Math.max(10, f.d));
+    };
+
+    const play = (name, done) => { clearTimeout(timer); anim = agent.anims[name]; idx = 0; prev = null; exiting = false; onEnd = done; step(); };
+    const idle = () => { timer = setTimeout(() => play('Blink', idle), 3000 + Math.random() * 5000); };
+
+    const io = new IntersectionObserver(async entries => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        try { agent = await (await fetch('assets/bonzi-agent.json')).json(); } catch (e) { return; }
+        stage.classList.add('is-live');
+        play('Show', () => play('Wave', idle));
+        stage.addEventListener('click', () => play(Math.random() < 0.5 ? 'Pleased' : 'Wave', idle));
+    }, { threshold: 0.5 });
+    io.observe(stage);
+}
 
 // Entradas: uma vez, quando a seção aparece
 const revealTargets = document.querySelectorAll('.panel, [data-reveal]');

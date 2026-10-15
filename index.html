@@ -45,7 +45,8 @@
                 </figure>
 
                 <div class="presence-wrap">
-                    <div class="presence" data-ui data-presence>
+                    <p class="presence-label" data-i18n="presenceLabel">Agora no meu GitHub</p>
+                    <a class="presence" data-ui data-presence href="https://github.com/gabrielhom" target="_blank">
                         <video class="presence-art" data-p-video src="assets/clawd-typing.mp4" poster="assets/clawd-typing.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
                         <div class="presence-text">
                             <strong data-p-title>Programando</strong>
@@ -53,7 +54,7 @@
                             <span><i class="fas fa-code-commit"></i> <span data-p-msg>Rich Presence pro Claude Code</span></span>
                             <span class="presence-time" data-p-time-row hidden><i class="fas fa-clock"></i> <span data-p-time></span></span>
                         </div>
-                    </div>
+                    </a>
                     <p class="presence-note" data-i18n="presenceNote">Ao vivo do meu GitHub, desenhado do jeito que o meu plugin <a href="#claude-discord-presence">claude-discord-presence</a> desenha.</p>
                 </div>
             </div>
@@ -126,7 +127,9 @@ query ──> API ── embed(question) ── cosine search ──────
 
             <article class="panel" id="bonzi" style="--pg:#d9d1f3; --pi:#241c45">
                 <div class="panel-media">
-                    <img class="pixel" src="assets/bonzi.png" width="600" height="480" loading="lazy" alt="Bonzi, o gorila roxo, acenando com as duas mãos, no sprite original">
+                    <button class="bonzi-stage" type="button" data-bonzi aria-label="Cutucar o Bonzi">
+                        <img class="pixel" src="assets/bonzi.png" width="600" height="480" loading="lazy" alt="Bonzi, o gorila roxo, acenando com as duas mãos, no sprite original">
+                    </button>
                 </div>
                 <div class="panel-row">
                     <span>C#</span>
