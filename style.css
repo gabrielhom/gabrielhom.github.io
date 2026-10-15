@@ -151,13 +151,13 @@ a:focus-visible, button:focus-visible {
     order: 2;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    align-items: end;
+    align-items: center;
     gap: clamp(24px, 4vw, 64px);
     margin: clamp(12px, 2svh, 28px) 0;
 }
 
 .hero-photo img {
-    width: min(23vw, 30svh);
+    width: min(30vw, 40svh);
     aspect-ratio: 1;
     object-fit: cover;
 }
