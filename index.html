@@ -7,38 +7,35 @@
     <meta name="description" content="Portfólio de Gabriel Mello - Desenvolvedor de Software focado em Python, Automação e IA aplicada (LLMs, RAG, agentes).">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>try{if(localStorage.getItem('theme')==='light'||(!localStorage.getItem('theme')&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('light')}catch(e){}</script>
+    <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('theme')==='light'||(!localStorage.getItem('theme')&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('light')}catch(e){}</script>
 </head>
 <body>
-    <div class="blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
     <main class="container">
         <header class="hero">
             <div class="avatar-container">
                 <img src="https://github.com/gabrielhom.png" alt="Gabriel Mello" class="avatar">
             </div>
-            <h1>Gabriel Mello</h1>
+            <h1 class="mask"><span>Gabriel Mello</span></h1>
             <p class="subtitle" data-i18n="subtitle">Software Developer · Automation & AI</p>
             <p class="bio" data-i18n="bio">
                 Desenvolvedor focado em automatizar processos e colocar <strong>IA</strong> pra trabalhar de verdade: <strong>LLMs</strong>, <strong>RAG</strong>, agentes e integrações.<br>
                 Especialista em <strong>Python</strong> e <strong>TypeScript</strong>.
             </p>
             
-            <div class="social-links">
-                <a href="https://github.com/gabrielhom" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/gabriel-henrique-oliveira-de-mello-4b6a26200/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:gabriel.henriqueom@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <div class="hero-actions">
+                <a href="mailto:gabriel.henriqueom@gmail.com" class="btn btn-primary hero-cta" data-i18n="contact">Fale comigo</a>
+                <div class="social-links">
+                    <a href="https://github.com/gabrielhom" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/gabriel-henrique-oliveira-de-mello-4b6a26200/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
             </div>
         </header>
 
         <section class="projects">
-            <h2 data-i18n="projectsTitle">Projetos em Destaque</h2>
+            <h2 data-i18n="projectsTitle" data-reveal>Projetos em Destaque</h2>
             <div class="grid">
                 <!-- claude-discord-presence -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fab fa-discord"></i>
                         <h3>claude-discord-presence</h3>
@@ -58,7 +55,7 @@
                 </article>
 
                 <!-- rag-docs -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-file-lines"></i>
                         <h3>rag-docs</h3>
@@ -78,7 +75,7 @@
                 </article>
 
                 <!-- Sub-Hunt -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-search"></i>
                         <h3>Sub-Hunt</h3>
@@ -96,7 +93,7 @@
                 </article>
 
                 <!-- VagaHunter -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-bullseye"></i>
                         <h3>VagaHunter API</h3>
@@ -114,7 +111,7 @@
                 </article>
 
                 <!-- NPM Stats Tracker -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-chart-line"></i>
                         <h3>NPM Stats Tracker</h3>
@@ -133,7 +130,7 @@
                 </article>
 
                 <!-- Support Chatbot -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-robot"></i>
                         <h3>Support Chatbot</h3>
@@ -152,7 +149,7 @@
                 </article>
 
                 <!-- Simple 3D -->
-                <article class="card">
+                <article class="card" data-reveal>
                     <div class="card-header">
                         <i class="fas fa-cube"></i>
                         <h3>Simple 3D Graphics</h3>
@@ -171,7 +168,7 @@
             </div>
         </section>
 
-        <footer>
+        <footer data-reveal>
             <p data-i18n="footer">&copy; 2026 Gabriel Mello. Construído com código limpo.</p>
         </footer>
     </main>

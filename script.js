@@ -29,6 +29,7 @@ const translations = {
     pt: {
         subtitle: 'Software Developer · Automation & AI',
         bio: 'Desenvolvedor focado em automatizar processos e colocar <strong>IA</strong> pra trabalhar de verdade: <strong>LLMs</strong>, <strong>RAG</strong>, agentes e integrações.<br>Especialista em <strong>Python</strong> e <strong>TypeScript</strong>.',
+        contact: 'Fale comigo',
         projectsTitle: 'Projetos em Destaque',
         presenceDesc: 'Discord Rich Presence para o <strong>Claude Code</strong>. Plugin <strong>zero dependências</strong> que fala IPC direto com o Discord, funciona no WSL2 via daemon no Windows, agrega várias sessões e não expõe prompts nem comandos.',
         ragdocsDesc: 'Pipeline de <strong>RAG</strong> para documentos com ingestão assíncrona: upload → fila (<strong>RabbitMQ</strong>) → workers de parsing/chunking/embedding → busca vetorial em <strong>Postgres + pgvector</strong>. Respostas do LLM com citação da página de origem.',
@@ -44,6 +45,7 @@ const translations = {
     en: {
         subtitle: 'Software Developer · Automation & AI',
         bio: 'Developer focused on automating processes and putting <strong>AI</strong> to real work: <strong>LLMs</strong>, <strong>RAG</strong>, agents and integrations.<br>Specialist in <strong>Python</strong> and <strong>TypeScript</strong>.',
+        contact: 'Get in touch',
         projectsTitle: 'Featured Projects',
         presenceDesc: 'Discord Rich Presence for <strong>Claude Code</strong>. <strong>Zero-dependency</strong> plugin that speaks Discord IPC directly, works on WSL2 via a Windows-side daemon, merges multiple sessions and never leaks prompts or commands.',
         ragdocsDesc: 'Document <strong>RAG</strong> pipeline with async ingestion: upload → queue (<strong>RabbitMQ</strong>) → parsing/chunking/embedding workers → vector search in <strong>Postgres + pgvector</strong>. LLM answers with source-page citations.',
@@ -65,13 +67,15 @@ function getDefaultLang() {
 
 let currentLang = localStorage.getItem('lang') || getDefaultLang();
 
-function applyLanguage(lang) {
+function applyLanguage(lang, animate) {
     currentLang = lang;
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
     const t = translations[lang];
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (t[key]) el.innerHTML = t[key];
+        if (!t[key]) return;
+        el.innerHTML = t[key];
+        if (animate) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
     });
     langBtn.textContent = lang === 'pt' ? 'EN' : 'PT';
     localStorage.setItem('lang', lang);
@@ -85,5 +89,25 @@ toggleGroup.appendChild(langBtn);
 applyLanguage(currentLang);
 
 langBtn.addEventListener('click', () => {
-    applyLanguage(currentLang === 'pt' ? 'en' : 'pt');
+    applyLanguage(currentLang === 'pt' ? 'en' : 'pt', true);
 });
+
+// Reveal once on scroll. Cards in the same row arrive one column apart; tags follow their card.
+document.querySelectorAll('.card').forEach((card, i) => {
+    card.style.setProperty('--d', `${(i + 1) % 2 * 90}ms`);
+    card.querySelectorAll('.tags span').forEach((tag, j) => tag.style.setProperty('--n', j));
+});
+
+const revealTargets = document.querySelectorAll('[data-reveal]');
+if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+        }
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    revealTargets.forEach(el => io.observe(el));
+} else {
+    revealTargets.forEach(el => el.classList.add('is-in'));
+}
