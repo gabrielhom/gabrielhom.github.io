@@ -1,77 +1,126 @@
-// Toggle Group Container
-const toggleGroup = document.createElement('div');
-toggleGroup.className = 'toggle-group';
-document.body.appendChild(toggleGroup);
-
-// Dark Mode Toggle
-const toggleBtn = document.createElement('button');
-toggleBtn.className = 'theme-toggle';
-toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-toggleBtn.setAttribute('aria-label', 'Toggle Theme');
-toggleGroup.appendChild(toggleBtn);
-
 const root = document.documentElement;
-const setIcon = () => {
-    toggleBtn.innerHTML = root.classList.contains('light')
-        ? '<i class="fas fa-sun"></i>'
-        : '<i class="fas fa-moon"></i>';
-};
+const toggleGroup = document.querySelector('.toggle-group');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Tema: claro (osso) por padrão, escuro (oliva) opcional
+const themeBtn = document.createElement('button');
+themeBtn.className = 'theme-toggle';
+themeBtn.setAttribute('aria-label', 'Toggle Theme');
+toggleGroup.appendChild(themeBtn);
+
+const setIcon = () => {
+    themeBtn.innerHTML = root.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+};
 setIcon();
 
-toggleBtn.addEventListener('click', () => {
-    localStorage.setItem('theme', root.classList.toggle('light') ? 'light' : 'dark');
+themeBtn.addEventListener('click', () => {
+    try { localStorage.setItem('theme', root.classList.toggle('dark') ? 'dark' : 'light'); } catch (e) { root.classList.toggle('dark'); }
     setIcon();
 });
 
-// Language Toggle
+// Idioma
 const translations = {
     pt: {
-        subtitle: 'Software Developer · Automation & AI',
-        bio: 'Desenvolvedor focado em automatizar processos e colocar <strong>IA</strong> pra trabalhar de verdade: <strong>LLMs</strong>, <strong>RAG</strong>, agentes e integrações.<br>Especialista em <strong>Python</strong> e <strong>TypeScript</strong>.',
+        navWork: 'Projetos',
+        navAbout: 'Sobre',
+        navContact: 'Contato',
+        bio: 'Desenvolvedor de software. Coloco <strong>IA</strong> pra trabalhar de verdade (LLMs, RAG, agentes) e automatizo o que dá pra automatizar, em <strong>Python</strong> e <strong>TypeScript</strong>.',
         contact: 'Fale comigo',
-        projectsTitle: 'Projetos em Destaque',
+        presenceNote: 'Ao vivo do meu GitHub, desenhado do jeito que o meu plugin <a href="#claude-discord-presence">claude-discord-presence</a> desenha.',
+        presenceStates: { typing: 'Programando', building: 'Em pausa', sleeping: 'Dormindo' },
+        presenceFallback: ['Programando', 'claude-discord-presence (main)', 'Rich Presence pro Claude Code'],
+        ago: 'há',
+        days: n => n === 1 ? 'há 1 dia' : `há ${n} dias`,
+        workTitle: 'Projetos',
+        presenceFact: 'Plugin do Claude Code',
         presenceDesc: 'Discord Rich Presence para o <strong>Claude Code</strong>. Plugin <strong>zero dependências</strong> que fala IPC direto com o Discord, funciona no WSL2 via daemon no Windows, agrega várias sessões e não expõe prompts nem comandos.',
         cuboTitle: 'Treino de Cubo Mágico',
-        cuboDesc: 'Treino de reconhecimento de <strong>F2L, OLL e PLL</strong> (119 casos) com um cubo 3D desenhado em SVG do zero e animação de giro de camada. Casos difíceis voltam mais vezes. <strong>PWA</strong> que funciona offline e sincroniza entre aparelhos via <strong>Supabase</strong>.',
-        ragdocsDesc: 'Pipeline de <strong>RAG</strong> para documentos com ingestão assíncrona: upload → fila (<strong>RabbitMQ</strong>) → workers de parsing/chunking/embedding → busca vetorial em <strong>Postgres + pgvector</strong>. Respostas do LLM com citação da página de origem.',
+        cuboFact: '119 casos',
+        cuboDesc: 'Treino de reconhecimento de <strong>F2L, OLL e PLL</strong> com um cubo 3D desenhado em SVG do zero e animação de giro de camada. Casos difíceis voltam mais vezes. <strong>PWA</strong> que funciona offline e sincroniza entre aparelhos via <strong>Supabase</strong>.',
+        ragdocsDesc: 'Pipeline de <strong>RAG</strong> para documentos com ingestão assíncrona: upload, fila no <strong>RabbitMQ</strong>, workers de parsing, chunking e embedding, e busca vetorial em <strong>Postgres + pgvector</strong>. Respostas do LLM com citação da página de origem.',
+        bonziFact: 'Windows · um .exe',
         bonziDesc: 'O <strong>BonziBuddy</strong> de volta à área de trabalho, com os sprites, animações e sons originais, e sem nada de malicioso: sem rede, sem propaganda. Reimplementa o motor de animação do <strong>Microsoft Agent</strong> em WPF, fala com a voz do Windows e canta Daisy Bell nota a nota via SSML.',
-        vagahunterDesc: 'Plataforma Fullstack de monitoramento de vagas. Utiliza <strong>Web Scraping</strong> para agregar oportunidades e <strong>IA (Gemini 2.0)</strong> para analisar o "match" da vaga com o perfil do candidato automaticamente.',
-        chatbotDesc: 'Chatbot de IA para suporte ao cliente via <strong>WhatsApp Business API</strong>. Usa <strong>OpenAI</strong> para gerar respostas, com roteamento de intenções, consulta de catálogo de produtos, rastreamento de pedidos e fila de atendimento humano.',
+        vagahunterDesc: 'Plataforma de monitoramento de vagas. Usa <strong>web scraping</strong> para agregar oportunidades e <strong>IA (Gemini 2.0)</strong> para analisar o "match" da vaga com o perfil do candidato automaticamente.',
+        chat1: 'Oi! Cadê meu pedido 1042?',
+        chat2: 'Seu pedido 1042 saiu para entrega hoje às 9h. Previsão: amanhã até as 18h. Quer o link de rastreio?',
+        chat3: 'Quero falar com uma pessoa.',
+        chat4: 'Claro. Passei sua conversa para a equipe, alguém responde aqui mesmo em instantes.',
+        chatbotDesc: 'Chatbot de IA para suporte ao cliente via <strong>WhatsApp Business API</strong>. Usa <strong>OpenAI</strong> para gerar respostas, com roteamento de intenções, consulta de catálogo, rastreamento de pedidos e fila de atendimento humano.',
+        simple3dFact: 'Zero bibliotecas',
         simple3dDesc: 'Engine de renderização 3D construída do zero com Vanilla JS. Sem bibliotecas externas, apenas matemática pura e HTML5 Canvas.',
         viewGithub: 'Ver no GitHub',
         code: 'Código',
-        footer: '&copy; 2026 Gabriel Mello. Construído com código limpo.'
+        aboutTitle: 'O que eu faço',
+        aboutLead: 'Gosto de software que roda sozinho e de IA que mostra de onde tirou a resposta.',
+        about1t: 'IA aplicada',
+        about1d: 'LLMs, RAG e agentes ligados a dados de verdade, com a resposta citando a fonte. Foi assim no rag-docs, no VagaHunter e no chatbot de suporte.',
+        about2t: 'Automação',
+        about2d: 'Filas, workers, scrapers, jobs agendados e integrações com APIs que rodam sem ninguém olhando.',
+        about3t: 'Ferramentas',
+        about3d: 'CLIs, plugins e apps pequenos, sem dependência sobrando: do plugin do Claude Code ao Bonzi.',
+        footerTitle: 'Bora conversar?',
+        sendMail: 'Mandar e-mail'
     },
     en: {
-        subtitle: 'Software Developer · Automation & AI',
-        bio: 'Developer focused on automating processes and putting <strong>AI</strong> to real work: <strong>LLMs</strong>, <strong>RAG</strong>, agents and integrations.<br>Specialist in <strong>Python</strong> and <strong>TypeScript</strong>.',
+        navWork: 'Work',
+        navAbout: 'About',
+        navContact: 'Contact',
+        bio: 'Software developer. I put <strong>AI</strong> to real work (LLMs, RAG, agents) and automate whatever can be automated, in <strong>Python</strong> and <strong>TypeScript</strong>.',
         contact: 'Get in touch',
-        projectsTitle: 'Featured Projects',
+        presenceNote: 'Live from my GitHub, drawn the way my <a href="#claude-discord-presence">claude-discord-presence</a> plugin draws it.',
+        presenceStates: { typing: 'Coding', building: 'On a break', sleeping: 'Sleeping' },
+        presenceFallback: ['Coding', 'claude-discord-presence (main)', 'Rich Presence for Claude Code'],
+        ago: '',
+        days: n => n === 1 ? '1 day ago' : `${n} days ago`,
+        workTitle: 'Work',
+        presenceFact: 'Claude Code plugin',
         presenceDesc: 'Discord Rich Presence for <strong>Claude Code</strong>. <strong>Zero-dependency</strong> plugin that speaks Discord IPC directly, works on WSL2 via a Windows-side daemon, merges multiple sessions and never leaks prompts or commands.',
         cuboTitle: 'Cube Algorithm Trainer',
-        cuboDesc: 'Recognition trainer for <strong>F2L, OLL and PLL</strong> (119 cases) with a 3D cube drawn in SVG from scratch and animated layer turns. Hard cases come back more often. Offline-ready <strong>PWA</strong> that syncs across devices via <strong>Supabase</strong>.',
-        ragdocsDesc: 'Document <strong>RAG</strong> pipeline with async ingestion: upload → queue (<strong>RabbitMQ</strong>) → parsing/chunking/embedding workers → vector search in <strong>Postgres + pgvector</strong>. LLM answers with source-page citations.',
+        cuboFact: '119 cases',
+        cuboDesc: 'Recognition trainer for <strong>F2L, OLL and PLL</strong> with a 3D cube drawn in SVG from scratch and animated layer turns. Hard cases come back more often. Offline-ready <strong>PWA</strong> that syncs across devices via <strong>Supabase</strong>.',
+        ragdocsDesc: 'Document <strong>RAG</strong> pipeline with async ingestion: upload, a <strong>RabbitMQ</strong> queue, parsing, chunking and embedding workers, and vector search in <strong>Postgres + pgvector</strong>. LLM answers cite the page they came from.',
+        bonziFact: 'Windows · one .exe',
         bonziDesc: '<strong>BonziBuddy</strong> back on the desktop, with the original sprites, animations and sounds, minus the malware: no network, no ads. Reimplements the <strong>Microsoft Agent</strong> animation engine in WPF, talks with the Windows voice and sings Daisy Bell note by note via SSML.',
-        vagahunterDesc: 'Fullstack job monitoring platform. Uses <strong>Web Scraping</strong> to aggregate opportunities and <strong>AI (Gemini 2.0)</strong> to automatically analyze job-candidate match.',
-        chatbotDesc: 'AI-powered customer support chatbot via <strong>WhatsApp Business API</strong>. Uses <strong>OpenAI</strong> for reply generation, with intent routing, product catalog lookup, order tracking, and human handoff queue.',
+        vagahunterDesc: 'Job monitoring platform. Uses <strong>web scraping</strong> to aggregate openings and <strong>AI (Gemini 2.0)</strong> to score how well each job matches the candidate\'s profile.',
+        chat1: 'Hi! Where is my order 1042?',
+        chat2: 'Order 1042 went out for delivery today at 9am. Expected tomorrow by 6pm. Want the tracking link?',
+        chat3: 'I want to talk to a person.',
+        chat4: 'Sure. I passed your conversation to the team, someone will reply right here shortly.',
+        chatbotDesc: 'AI customer support chatbot on the <strong>WhatsApp Business API</strong>. Uses <strong>OpenAI</strong> for replies, with intent routing, catalog lookup, order tracking and a human handoff queue.',
+        simple3dFact: 'Zero libraries',
         simple3dDesc: '3D rendering engine built from scratch with Vanilla JS. No external libraries, just pure math and HTML5 Canvas.',
         viewGithub: 'View on GitHub',
         code: 'Code',
-        footer: '&copy; 2026 Gabriel Mello. Built with clean code.'
+        aboutTitle: 'What I do',
+        aboutLead: 'I like software that runs on its own and AI that shows where its answer came from.',
+        about1t: 'Applied AI',
+        about1d: 'LLMs, RAG and agents wired to real data, with answers that cite their source. That is how rag-docs, VagaHunter and the support chatbot work.',
+        about2t: 'Automation',
+        about2d: 'Queues, workers, scrapers, scheduled jobs and API integrations that run without anyone watching.',
+        about3t: 'Tools',
+        about3d: 'CLIs, plugins and small apps with no dependency to spare: from the Claude Code plugin to Bonzi.',
+        footerTitle: 'Let\'s talk',
+        sendMail: 'Send an email'
     }
 };
 
 function getDefaultLang() {
-    const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    const browserLang = (navigator.language || '').toLowerCase();
     return browserLang.startsWith('pt') ? 'pt' : 'en';
 }
 
-let currentLang = localStorage.getItem('lang') || getDefaultLang();
+let currentLang;
+try { currentLang = localStorage.getItem('lang'); } catch (e) {}
+currentLang = currentLang || getDefaultLang();
+
+const langBtn = document.createElement('button');
+langBtn.className = 'lang-toggle';
+langBtn.setAttribute('aria-label', 'Toggle Language');
+toggleGroup.appendChild(langBtn);
 
 function applyLanguage(lang, animate) {
     currentLang = lang;
-    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+    root.lang = lang === 'pt' ? 'pt-BR' : 'en';
     const t = translations[lang];
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -80,29 +129,83 @@ function applyLanguage(lang, animate) {
         if (animate) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
     });
     langBtn.textContent = lang === 'pt' ? 'EN' : 'PT';
-    localStorage.setItem('lang', lang);
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+    renderPresence();
 }
 
-const langBtn = document.createElement('button');
-langBtn.className = 'lang-toggle';
-langBtn.setAttribute('aria-label', 'Toggle Language');
-toggleGroup.appendChild(langBtn);
+langBtn.addEventListener('click', () => applyLanguage(currentLang === 'pt' ? 'en' : 'pt', true));
+
+// Status ao vivo: o último push público no GitHub, no formato do claude-discord-presence
+const presence = {
+    title: document.querySelector('[data-p-title]'),
+    repo: document.querySelector('[data-p-repo]'),
+    msg: document.querySelector('[data-p-msg]'),
+    timeRow: document.querySelector('[data-p-time-row]'),
+    time: document.querySelector('[data-p-time]'),
+    video: document.querySelector('[data-p-video]'),
+    state: null,
+    mood: 'typing'
+};
+
+const pad = n => String(n).padStart(2, '0');
+
+function renderPresence() {
+    const t = translations[currentLang];
+    const s = presence.state;
+    if (!s) {
+        [presence.title.textContent, presence.repo.textContent, presence.msg.textContent] = t.presenceFallback;
+        return;
+    }
+    const secs = Math.max(0, Math.floor((Date.now() - s.at) / 1000));
+    const mood = secs < 3 * 3600 ? 'typing' : secs < 48 * 3600 ? 'building' : 'sleeping';
+    if (mood !== presence.mood) {
+        presence.mood = mood;
+        const name = mood === 'typing' ? 'clawd-typing' : mood === 'building' ? 'clawd-building' : 'clawd-sleeping';
+        presence.video.poster = `assets/${name}.jpg`;
+        presence.video.src = `assets/${name}.mp4`;
+        if (!reduceMotion) presence.video.play().catch(() => {});
+    }
+    presence.title.textContent = t.presenceStates[mood];
+    presence.repo.textContent = `${s.repo} (${s.branch})`;
+    presence.msg.textContent = s.msg;
+    presence.time.textContent = secs < 86400
+        ? `${t.ago} ${pad(Math.floor(secs / 3600))}:${pad(Math.floor(secs / 60) % 60)}:${pad(secs % 60)}`.trim()
+        : t.days(Math.floor(secs / 86400));
+    presence.timeRow.hidden = false;
+}
+
+async function loadPresence() {
+    // ponytail: 2 chamadas sem token por visita; o limite do GitHub é 60/h por IP, cache de 5 min na sessão
+    let s;
+    try { s = JSON.parse(sessionStorage.getItem('presence') || 'null'); } catch (e) {}
+    if (!s || Date.now() - s.fetched > 5 * 60 * 1000) {
+        const repos = await (await fetch('https://api.github.com/users/gabrielhom/repos?sort=pushed&per_page=5')).json();
+        const repo = repos.find(r => !r.fork && r.name !== 'gabrielhom.github.io');
+        const commits = await (await fetch(`https://api.github.com/repos/gabrielhom/${repo.name}/commits?per_page=1`)).json();
+        s = {
+            repo: repo.name,
+            branch: repo.default_branch,
+            msg: commits[0].commit.message.split('\n')[0],
+            at: Date.parse(commits[0].commit.committer.date),
+            fetched: Date.now()
+        };
+        try { sessionStorage.setItem('presence', JSON.stringify(s)); } catch (e) {}
+    }
+    presence.state = s;
+    renderPresence();
+    setInterval(renderPresence, 1000);
+}
 
 applyLanguage(currentLang);
+loadPresence().catch(() => {});  // sem rede ou sem cota: fica o card estático
 
-langBtn.addEventListener('click', () => {
-    applyLanguage(currentLang === 'pt' ? 'en' : 'pt', true);
-});
+// Vídeos: sem autoplay para quem pede menos movimento
+if (reduceMotion) document.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
 
-// Reveal once on scroll. Cards in the same row arrive one column apart; tags follow their card.
-document.querySelectorAll('.card').forEach((card, i) => {
-    card.style.setProperty('--d', `${(i + 1) % 2 * 90}ms`);
-    card.querySelectorAll('.tags span').forEach((tag, j) => tag.style.setProperty('--n', j));
-});
-
-const revealTargets = document.querySelectorAll('[data-reveal]');
+// Entradas: uma vez, quando a seção aparece
+const revealTargets = document.querySelectorAll('.panel, [data-reveal]');
 if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
+    const io = new IntersectionObserver(entries => {
         for (const entry of entries) {
             if (!entry.isIntersecting) continue;
             entry.target.classList.add('is-in');
